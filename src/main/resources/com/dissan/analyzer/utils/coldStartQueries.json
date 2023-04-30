@@ -1,0 +1,57 @@
+{
+  "AVRO" : {
+    "fields": [
+      "key",
+      "resolutiondate",
+      "versions",
+      "created",
+      "fixVersion"
+    ],
+    "start" : 0,
+    "maxResults": -1
+  },
+  "STORM" : {
+    "fields": [
+      "key",
+      "resolutiondate",
+      "versions",
+      "created",
+      "fixVersion"
+    ],
+    "start" : 0,
+    "maxResults": -1
+  },
+  "ZOOKEEPER" : {
+    "fields": [
+      "key",
+      "resolutiondate",
+      "versions",
+      "created",
+      "fixVersion"
+    ],
+    "start" : 0,
+    "maxResults": -1
+  },
+  "SYNCOPE" : {
+    "fields": [
+      "key",
+      "resolutiondate",
+      "versions",
+      "created",
+      "fixVersion"
+    ],
+    "start" : 0,
+    "maxResults": -1
+  },
+  "QPID" : {
+    "fields": [
+      "key",
+      "resolutiondate",
+      "versions",
+      "created",
+      "fixVersion"
+    ],
+    "start" : 0,
+    "maxResults": -1
+  }
+}

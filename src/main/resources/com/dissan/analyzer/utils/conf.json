@@ -1,0 +1,14 @@
+{
+  "BOOKKEEPER" : {
+   "fields": [
+     "key",
+    "resolutiondate",
+    "versions",
+    "created",
+    "fixVersions"
+     ],
+    "start" : 0,
+    "maxResults": -1
+  }
+}
+
