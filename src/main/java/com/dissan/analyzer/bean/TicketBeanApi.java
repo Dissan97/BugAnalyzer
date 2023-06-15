@@ -1,6 +1,6 @@
 package com.dissan.analyzer.bean;
 
-public interface BugBeanAPI {
+public interface TicketBeanApi {
 
     String getBugVersionInfo();
     int getBugSize();

@@ -1,35 +1,35 @@
 package com.dissan.analyzer.bean;
 
-import com.dissan.analyzer.model.JiraBug;
+import com.dissan.analyzer.model.JiraTicket;
 import com.dissan.analyzer.model.Release;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class JiraBugBean implements BugBeanAPI{
-    private List <JiraBug> bugInfoList = new ArrayList<>();
+public class JiraTicketBean implements TicketBeanApi {
+    private List <JiraTicket> bugInfoList = new ArrayList<>();
     private final TicketJiraBean releasesBean;
     private final String projectName;
-
-    public JiraBugBean(String projectName,TicketJiraBean releases) {
+    public JiraTicketBean(String projectName, TicketJiraBean releases) {
         this.projectName = projectName;
         this.releasesBean = releases;
     }
 
-    public JiraBugBean(String projectName, List<JiraBug> bugBeans, TicketJiraBean releases) {
+    public JiraTicketBean(String projectName, List<JiraTicket> bugBeans, TicketJiraBean releases) {
         this.projectName = projectName;
         this.bugInfoList = bugBeans;
         this.releasesBean = releases;
     }
 
-    public  void add(JiraBug bugInfo) {
-        this.bugInfoList.add(bugInfo);
+    public  void add(JiraTicket jiraTicket) {
+        this.bugInfoList.add(jiraTicket);
     }
 
     @Override
     public String getBugVersionInfo() {
         StringBuilder builder = new StringBuilder("bug info for: ");
         builder.append('[').append(this.projectName).append(']').append('\n');
-        for (JiraBug b:
+        for (JiraTicket b:
              this.bugInfoList) {
             builder.append(b.getKey()).append('{').append('\n').append('\t').append('[');
             if (b.getInjectedVersion() != null){
@@ -40,26 +40,16 @@ public class JiraBugBean implements BugBeanAPI{
         return builder.toString();
     }
 
-    public List<JiraBug> getBugInfoList(){
-        return this.bugInfoList;
-    }
+    public List<JiraTicket> getBugWithIv(){
+        List<JiraTicket> jiraTicketList = new ArrayList<>();
 
-    public List<JiraBug> getBugWithIv(){
-        List<JiraBug> jiraBugList = new ArrayList<>();
-
-        for (JiraBug jb:
+        for (JiraTicket jb:
              this.bugInfoList) {
-            if (jb.getInjectedVersion() != null && jb.getFixedVersion().getIndex() != jb.getOpeningVersion().getIndex()){
-                jiraBugList.add(jb);
+            if (jb.getInjectedVersion() != null){
+                jiraTicketList.add(jb);
             }
         }
-
-        jiraBugList.sort(Comparator.comparingInt(o -> {
-            String key = o.getKey();
-            return Integer.parseInt(key.split("-")[1]);
-        }));
-
-        return jiraBugList;
+        return jiraTicketList;
     }
 
     @Override
@@ -75,8 +65,11 @@ public class JiraBugBean implements BugBeanAPI{
         return this.releasesBean.getBugReleases();
     }
 
-
     public List<Release> getReleasesList() {
         return this.releasesBean.getReleases();
+    }
+
+    public List<JiraTicket> getBugs() {
+        return this.bugInfoList;
     }
 }

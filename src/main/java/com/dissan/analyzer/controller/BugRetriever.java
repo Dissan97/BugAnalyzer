@@ -1,8 +1,8 @@
 package com.dissan.analyzer.controller;
 
-import com.dissan.analyzer.bean.JiraBugBean;
+import com.dissan.analyzer.bean.JiraTicketBean;
 import com.dissan.analyzer.bean.TicketJiraBean;
-import com.dissan.analyzer.model.JiraBug;
+import com.dissan.analyzer.model.JiraTicket;
 import com.dissan.analyzer.utils.JiraApiRequest;
 import com.dissan.analyzer.model.Release;
 import com.dissan.analyzer.utils.ConfigProjectsJson;
@@ -15,12 +15,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * Class used to retrieve jira ticket information
+ */
+
 public class BugRetriever implements BugRetrieverAPI{
     private final Map<LocalDateTime, String> releaseNames = new HashMap<>();
     private final HashMap<LocalDateTime, String> releaseID = new HashMap<>();
     private final ArrayList<LocalDateTime> releases = new ArrayList<>();
     private final Map<String, TicketJiraBean> ticketJiraBeanMap = new HashMap<>();
-    private final Map <String, JiraBugBean> bugBeanMap = new HashMap<>();
+    private final Map <String, JiraTicketBean> bugBeanMap = new HashMap<>();
 
     public void start() throws IOException {
         this.start("conf.json");
@@ -34,6 +38,10 @@ public class BugRetriever implements BugRetrieverAPI{
         }
     }
 
+    /**
+     * This method does query to retrieve information about issues
+     * @param apiRequest Json file request are parsed and executed
+     */
     private void doQuery(@NotNull JiraApiRequest apiRequest) throws IOException {
         int startIndex = apiRequest.getStart();
         int total = apiRequest.getTotal();
@@ -84,26 +92,30 @@ public class BugRetriever implements BugRetrieverAPI{
 
         Set<String> keys = fieldMap.keySet();
         System.out.println(keys.size());
-        JiraBugBean bugBean = new JiraBugBean(projectName, this.ticketJiraBeanMap.get(projectName));
+        JiraTicketBean bugBean = new JiraTicketBean(projectName, this.ticketJiraBeanMap.get(projectName));
         this.bugBeanMap.put(projectName, bugBean);
 
         for (String key: keys){
             JSONObject field = fieldMap.get(key);
-            JiraBug jiraBug = BugBuilder.getBugInstance(this.ticketJiraBeanMap.get(projectName), field, key);
-            addBugToMap(projectName, jiraBug);
+            JiraTicket jiraTicket = BugBuilder.getBugInstance(this.ticketJiraBeanMap.get(projectName), field, key);
+            addBugToMap(projectName, jiraTicket);
         }
+
+        //Need to order the list of map -> by fixed date...
+
+        this.bugBeanMap.get(projectName).getBugs().sort(Comparator.comparing(JiraTicket::getFixedDate));
 
     }
 
-    private void addBugToMap(String projectName, JiraBug jiraBug){
+    private void addBugToMap(String projectName, JiraTicket jiraTicket){
         //todo add also bug that does not contain injected version
-        if (jiraBug != null) {
-            if (jiraBug.getInjectedVersion() != null) {
-                if (!jiraBug.getFixedVersion().equals(jiraBug.getInjectedVersion()) || !jiraBug.getFixedVersion().equals(jiraBug.getOpeningVersion())) {
-                    this.bugBeanMap.get(projectName).add(jiraBug);
+        if (jiraTicket != null) {
+            if (jiraTicket.getInjectedVersion() != null) {
+                if (!jiraTicket.getFixedVersion().equals(jiraTicket.getInjectedVersion()) || !jiraTicket.getFixedVersion().equals(jiraTicket.getOpeningVersion())) {
+                    this.bugBeanMap.get(projectName).add(jiraTicket);
                 }
             }else {
-                this.bugBeanMap.get(projectName).add(jiraBug);
+                this.bugBeanMap.get(projectName).add(jiraTicket);
             }
         }
     }
@@ -139,12 +151,16 @@ public class BugRetriever implements BugRetrieverAPI{
     }
 
     @Override
-    public JiraBugBean getBugBean(String projectName) {
+    public JiraTicketBean getBugBean(String projectName) {
         if (this.bugBeanMap.containsKey(projectName)){
             return this.bugBeanMap.get(projectName);
         }
         return null;
     }
+
+    /**
+     * Method used to refresh all the data
+     */
 
     public void close(){
         this.ticketJiraBeanMap.clear();
@@ -154,8 +170,7 @@ public class BugRetriever implements BugRetrieverAPI{
         this.bugBeanMap.clear();
     }
 
-
-    public Map<String, JiraBugBean> getBugMap() {
+    public Map<String, JiraTicketBean> getBugBeanMap() {
         return this.bugBeanMap;
     }
 }

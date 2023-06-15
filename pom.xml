@@ -42,22 +42,22 @@
             <scope>compile</scope>
         </dependency>
 
+
+        <!-- Dependency useful to call Git APIs (in local) -->
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>6.5.0.202303070854-r</version>
+            <version>5.4.2.201908231537-r</version>
         </dependency>
 
+        <!-- This contains StaticLoggerBinder class -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>1.7.25</version>
+        </dependency>
 
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

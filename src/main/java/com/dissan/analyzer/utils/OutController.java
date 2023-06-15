@@ -19,8 +19,8 @@ public class OutController {
         try {
             this.out.write(m);
             this.out.flush();
-        } catch (IOException ignore) {
-            //is ignored
+        } catch (IOException e) {
+            e.getMessage();
             System.exit(1);
         }
     }
@@ -29,4 +29,11 @@ public class OutController {
         this.print(m + '\n');
     }
 
+    public void close() {
+        try {
+            this.out.close();
+        } catch (IOException e) {
+            e.getMessage();
+        }
+    }
 }

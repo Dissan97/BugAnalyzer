@@ -43,7 +43,7 @@
     "start" : 0,
     "maxResults": -1
   },
-  "QPID" : {
+  "TAJO" : {
     "fields": [
       "key",
       "resolutiondate",
