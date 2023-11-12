@@ -6,7 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="analyzer" />
+        <module name="proportion" />
+        <module name="application" />
+        <module name="gitChecker" />
       </profile>
     </annotationProcessing>
   </component>
